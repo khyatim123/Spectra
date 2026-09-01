@@ -36,10 +36,11 @@ def landmarks_to_points(
 	frame_width: int,
 	frame_height: int,
 ) -> np.ndarray:
-	landmarks = face_landmarks.landmark
+	# Handle both NormalizedLandmarkList objects and direct lists
+	landmarks_list = face_landmarks.landmark if hasattr(face_landmarks, 'landmark') else face_landmarks
 	return np.array(
 		[
-			(landmarks[index].x * frame_width, landmarks[index].y * frame_height)
+			(landmarks_list[index].x * frame_width, landmarks_list[index].y * frame_height)
 			for index in indices
 		],
 		dtype=np.float32,
@@ -190,3 +191,6 @@ def parse_args() -> argparse.Namespace:
 if __name__ == "__main__":
 	arguments = parse_args()
 	run(arguments.camera, arguments.eye_threshold, arguments.closure_seconds)
+
+
+
